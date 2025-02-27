@@ -1,20 +1,32 @@
 package internal
 
-import "sync"
+import (
+	"github.com/pkg/errors"
+	"sync"
+)
 
-type Engine struct {
+type InMemoryEngine struct {
 	m   map[string]string
 	mtx sync.RWMutex
 }
 
-func NewEngine() *Engine {
-	return &Engine{
+func NewInMemoryEngine() *InMemoryEngine {
+	return &InMemoryEngine{
 		m:   make(map[string]string),
 		mtx: sync.RWMutex{},
 	}
 }
 
-func (e *Engine) Get(key string) (string, bool) {
+func NewEngine(engineType EngineType) (iEngine, error) {
+	switch engineType {
+	case InMemoryEngineType:
+		return NewInMemoryEngine(), nil
+	default:
+		return nil, errors.New("invalid engine type")
+	}
+}
+
+func (e *InMemoryEngine) Get(key string) (string, bool) {
 	e.mtx.RLock()
 	defer e.mtx.RUnlock()
 
@@ -23,14 +35,14 @@ func (e *Engine) Get(key string) (string, bool) {
 	return val, has
 }
 
-func (e *Engine) Set(key string, value string) {
+func (e *InMemoryEngine) Set(key string, value string) {
 	e.mtx.Lock()
 	defer e.mtx.Unlock()
 
 	e.m[key] = value
 }
 
-func (e *Engine) Del(key string) {
+func (e *InMemoryEngine) Del(key string) {
 	e.mtx.Lock()
 	defer e.mtx.Unlock()
 

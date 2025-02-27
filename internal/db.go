@@ -48,11 +48,13 @@ func (db *DB) Query(ctx context.Context, query string) (string, error) {
 		if err != nil {
 			return "", errors.Wrap(err, "failed to set value")
 		}
+		resp = "ok"
 	case Del:
 		err = db.storage.Del(ctx, command.Args[0])
 		if err != nil {
 			return "", errors.Wrap(err, "failed to delete value")
 		}
+		resp = "ok"
 	}
 
 	return resp, nil

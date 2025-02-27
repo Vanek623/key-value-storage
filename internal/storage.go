@@ -26,6 +26,15 @@ func NewStorage(engine iEngine, logger zerolog.Logger) *Storage {
 	}
 }
 
+func NewStorageWithEngine(config EngineConfig, logger zerolog.Logger) (*Storage, error) {
+	engine, err := NewEngine(config.Type)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewStorage(engine, logger), nil
+}
+
 func (s *Storage) Set(_ context.Context, key string, value string) error {
 	s.engine.Set(key, value)
 

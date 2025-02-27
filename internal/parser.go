@@ -3,7 +3,6 @@ package internal
 import (
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	"slices"
 	"strings"
 	"unicode/utf8"
@@ -32,7 +31,7 @@ func NewParser(logger zerolog.Logger) Parser {
 }
 
 func (p Parser) Parse(line string) (Command, error) {
-	p.logger.Debug().Msgf("parsing %s", line)
+	p.logger.Debug().Msgf("parsing '%s'", line)
 	tokens := strings.Split(line, " ")
 	for i, param := range tokens {
 		invalidCharIndex := strings.IndexFunc(param, func(r rune) bool {
@@ -54,7 +53,7 @@ func (p Parser) Parse(line string) (Command, error) {
 		return Command{}, errors.Wrapf(ErrInvalidCommand, "invalid command len %d", len(tokens))
 	}
 
-	log.Debug().Msgf("tokens: %v", tokens)
+	p.logger.Debug().Msgf("tokens: %v", tokens)
 
 	commandType := CommandType(tokens[0])
 	switch commandType {
