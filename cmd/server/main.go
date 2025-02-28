@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
+	"github.com/spf13/cobra"
 	"key-value-storage/cmd"
 	"key-value-storage/internal"
 )

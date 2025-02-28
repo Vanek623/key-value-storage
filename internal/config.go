@@ -1,6 +1,9 @@
 package internal
 
-import "time"
+import (
+	"net"
+	"time"
+)
 
 type EngineType string
 
@@ -15,7 +18,7 @@ type EngineConfig struct {
 
 // NetworkConfig представляет конфигурацию сети
 type NetworkConfig struct {
-	Address        string        `yaml:"address"`
+	Address        net.TCPAddr   `yaml:"address"`
 	MaxConnections int           `yaml:"max_connections"`
 	MaxMessageSize int           `yaml:"max_message_size"`
 	IdleTimeout    time.Duration `yaml:"idle_timeout"`
