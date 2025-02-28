@@ -1,0 +1,13 @@
+engine:
+  type: "in-memory"
+network:
+  max_connections: 1
+  max_message_size: 4096
+  idle_timeout: 10s
+  address:
+    ip: [127, 0, 0, 1]
+    port: 3223
+logging:
+  level: "debug"
+  output: "./output.log"
+mode: "tcp"

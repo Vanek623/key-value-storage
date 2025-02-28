@@ -8,7 +8,7 @@ import (
 type EngineType string
 
 const (
-	InMemoryEngineType EngineType = "in_memory"
+	InMemoryEngineType EngineType = "in-memory"
 )
 
 // EngineConfig представляет конфигурацию движка
@@ -18,10 +18,10 @@ type EngineConfig struct {
 
 // NetworkConfig представляет конфигурацию сети
 type NetworkConfig struct {
-	Address        net.TCPAddr   `yaml:"address"`
-	MaxConnections int           `yaml:"max_connections"`
-	MaxMessageSize int           `yaml:"max_message_size"`
-	IdleTimeout    time.Duration `yaml:"idle_timeout"`
+	MaxConnections int           `yaml:"max_connections" mapstructure:"max_connections"`
+	MaxMessageSize int           `yaml:"max_message_size" mapstructure:"max_message_size"`
+	IdleTimeout    time.Duration `yaml:"idle_timeout" mapstructure:"idle_timeout"`
+	Address        net.TCPAddr   `yaml:"address" mapstructure:"address"`
 }
 
 const ConsoleLogOutput = "console"

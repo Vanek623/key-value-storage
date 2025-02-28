@@ -3,14 +3,15 @@ package internal
 import (
 	"bufio"
 	"context"
-	"github.com/pkg/errors"
-	"github.com/rs/zerolog"
 	"io"
 	"log"
 	"net"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/pkg/errors"
+	"github.com/rs/zerolog"
 )
 
 const Delim = '\n'
@@ -49,7 +50,7 @@ func (t *ServerTCP) Run(ctx context.Context) error {
 	}
 
 	t.isRunning = true
-	listener, err := net.Listen("tcp", t.cfg.Address)
+	listener, err := net.ListenTCP("tcp", &t.cfg.Address)
 	if err != nil {
 		return err
 	}
@@ -63,7 +64,7 @@ func (t *ServerTCP) Run(ctx context.Context) error {
 		}
 	}()
 
-	t.logger.Info().Msg("listening on tcp://" + t.cfg.Address)
+	t.logger.Info().Msg("listening on tcp://" + t.cfg.Address.String())
 
 	for {
 		select {

@@ -1,12 +1,15 @@
 package cmd
 
 import (
+	"net"
+	"os"
+	"time"
+
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"gopkg.in/yaml.v3"
+
 	"key-value-storage/internal"
-	"os"
-	"time"
 )
 
 func ReadConfig() (internal.Config, error) {
@@ -17,7 +20,10 @@ func ReadConfig() (internal.Config, error) {
 			Type: internal.InMemoryEngineType,
 		},
 		Network: internal.NetworkConfig{
-			Address:        "127.0.0.1:3333",
+			Address: net.TCPAddr{
+				IP:   net.ParseIP("127.0.0.1"),
+				Port: 3333,
+			},
 			MaxConnections: 100,
 			MaxMessageSize: 4096,
 			IdleTimeout:    5 * time.Minute,
@@ -28,13 +34,13 @@ func ReadConfig() (internal.Config, error) {
 		},
 	}
 
-	data, err := os.ReadFile("config.yaml")
+	data, err := os.ReadFile("kv-storage-config.yaml")
 	if err != nil {
-		return internal.Config{}, errors.Wrapf(err, "failed to read config.yaml")
+		return internal.Config{}, errors.Wrapf(err, "failed to read kv-storage-config.yaml")
 	}
 
 	if err = yaml.Unmarshal(data, &config); err != nil {
-		return internal.Config{}, errors.Wrapf(err, "failed to unmarshal config.yaml")
+		return internal.Config{}, errors.Wrapf(err, "failed to unmarshal kv-storage-config.yaml")
 	}
 
 	return config, nil
