@@ -96,7 +96,7 @@ func init() {
 	runCmd.PersistentFlags().StringP("log-output", "o", "",
 		"log output 'console' or 'file' (default "+defaultLogOutput+")",
 	)
-
+	
 	if err := viper.BindPFlag("network.address.ip", runCmd.PersistentFlags().Lookup("address")); err != nil {
 		panic(err)
 	}
