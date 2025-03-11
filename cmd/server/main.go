@@ -49,16 +49,20 @@ var runCmd = &cobra.Command{
 }
 
 const (
-	defaultConfigFilename = "$HOME/key-value-storage.yaml"
-	defaultAppMode        = internal.ConsoleAppMode
-	defaultEngineType     = internal.InMemoryEngineType
-	defaultAddress        = "127.0.0.1"
-	defaultPort           = 3333
-	defaultMaxConnections = 10
-	defaultMaxMessageSize = 4096
-	defaultIdleTimeout    = 5 * time.Minute
-	defaultLogLevel       = "info"
-	defaultLogOutput      = "console"
+	defaultConfigFilename  = "$HOME/key-value-storage.yaml"
+	defaultAppMode         = internal.ConsoleAppMode
+	defaultEngineType      = internal.InMemoryEngineType
+	defaultAddress         = "127.0.0.1"
+	defaultPort            = 3333
+	defaultMaxConnections  = 10
+	defaultMaxMessageSize  = 4096
+	defaultIdleTimeout     = 5 * time.Minute
+	defaultLogLevel        = "info"
+	defaultLogOutput       = "console"
+	defaultWalBatchSize    = 100
+	defaultWalBatchTimeout = 100 * time.Millisecond
+	defaultWalSegmentSize  = 10 * 1024 * 1024 // 10MB
+	defaultWalDataDir      = "$HOME/wal"
 )
 
 var cfgFilePath string
@@ -96,7 +100,7 @@ func init() {
 	runCmd.PersistentFlags().StringP("log-output", "o", "",
 		"log output 'console' or 'file' (default "+defaultLogOutput+")",
 	)
-	
+
 	if err := viper.BindPFlag("network.address.ip", runCmd.PersistentFlags().Lookup("address")); err != nil {
 		panic(err)
 	}
@@ -134,6 +138,11 @@ func init() {
 	viper.SetDefault("engine.type", defaultEngineType)
 	viper.SetDefault("logging.level", defaultLogLevel)
 	viper.SetDefault("logging.output", defaultLogOutput)
+	viper.SetDefault("wal.enabled", false)
+	viper.SetDefault("wal.flushing_batch_size", defaultWalBatchSize)
+	viper.SetDefault("wal.flushing_batch_timeout", defaultWalBatchTimeout)
+	viper.SetDefault("wal.max_segment_size", defaultWalSegmentSize)
+	viper.SetDefault("wal.data_directory", defaultWalDataDir)
 
 	rootCmd.AddCommand(helpCmd)
 	rootCmd.AddCommand(runCmd)
